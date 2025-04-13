@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 "use client"
 
 import { useState, useEffect } from "react"
@@ -24,10 +23,8 @@ const AttendeeDashboard = () => {
   const [eventAttendees, setEventAttendees] = useState({})
   const navigate = useNavigate()
 
-  // API URL
   const API_URL = "http://127.0.0.1:5000"
 
-  // Sample notifications
   const sampleNotifications = [
     {
       id: 1,
@@ -45,7 +42,6 @@ const AttendeeDashboard = () => {
     },
   ]
 
-  // Sample events data - will be replaced with API data
   const sampleEvents = [
     {
       id: "evt1",
@@ -73,7 +69,6 @@ const AttendeeDashboard = () => {
     },
   ]
 
-  // Check if user is authenticated
   const checkAuth = () => {
     const userRole = localStorage.getItem("userRole")
     if (!userRole) {
@@ -83,7 +78,6 @@ const AttendeeDashboard = () => {
     return true
   }
 
-  // Fetch events from the backend
   const fetchEvents = async () => {
     if (!checkAuth()) return
 
@@ -107,12 +101,10 @@ const AttendeeDashboard = () => {
     }
   }
 
-  // Fetch user data and registered events
   const fetchUserData = async () => {
     if (!checkAuth()) return
 
     try {
-      // Try to get user data from API
       const userResponse = await fetch(`${API_URL}/me`, {
         credentials: "include",
       })
@@ -124,7 +116,6 @@ const AttendeeDashboard = () => {
           email: userData.email || "user@example.com",
         })
 
-        // Store in localStorage for persistence
         localStorage.setItem("userName", userData.name)
         localStorage.setItem("userId", userData.id)
       } else {
@@ -150,7 +141,6 @@ const AttendeeDashboard = () => {
     }
   }
 
-  // Fetch events and user data on component mount
   useEffect(() => {
     if (!checkAuth()) return
 
@@ -159,7 +149,6 @@ const AttendeeDashboard = () => {
     setNotifications(sampleNotifications)
   }, [])
 
-  // Filter events based on search and filters
   const filteredEvents = events.filter((event) => {
     const matchesSearch =
       !filters.search ||
@@ -175,7 +164,6 @@ const AttendeeDashboard = () => {
     return matchesSearch && matchesLocation && matchesDate && matchesTab
   })
 
-  // Handle event registration
   const handleRegister = async (eventId) => {
     if (registeredEvents.includes(eventId)) {
       setNotification("You're already registered for this event")
@@ -183,7 +171,7 @@ const AttendeeDashboard = () => {
     }
 
     try {
-      // For demo purposes, just update the UI
+      
       setRegisteredEvents([...registeredEvents, eventId])
       setNotification("Successfully registered for the event!")
     } catch (err) {
@@ -194,7 +182,7 @@ const AttendeeDashboard = () => {
     setTimeout(() => setNotification(""), 3000)
   }
 
-  // Handle setting reminders
+  
   const handleReminder = (eventId) => {
     const event = events.find((e) => e.id === eventId)
     if (event) {
@@ -203,10 +191,9 @@ const AttendeeDashboard = () => {
     }
   }
 
-  // Handle accepting an invitation
+ 
   const handleAcceptInvitation = async (invitationId) => {
     try {
-      // For demo purposes, just update the UI
       const acceptedInvitation = invitations.find((inv) => inv.id === invitationId)
       setInvitations(invitations.filter((inv) => inv.id !== invitationId))
 
@@ -223,7 +210,6 @@ const AttendeeDashboard = () => {
     setTimeout(() => setNotification(""), 3000)
   }
 
-  // Handle declining an invitation
   const handleDeclineInvitation = async (invitationId) => {
     try {
 
@@ -237,7 +223,6 @@ const AttendeeDashboard = () => {
     setTimeout(() => setNotification(""), 3000)
   }
 
-  // Handle sign out
   const handleSignOut = () => {
     localStorage.removeItem("userRole")
     localStorage.removeItem("userName")
@@ -245,12 +230,10 @@ const AttendeeDashboard = () => {
     navigate("/login")
   }
 
-  // Mark all notifications as read
   const markAllNotificationsAsRead = () => {
     setNotifications(notifications.map((notif) => ({ ...notif, read: true })))
   }
 
-  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
