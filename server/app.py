@@ -14,11 +14,11 @@ DB_PATH = 'eventify.db'
 def init_db():
     
     try:
-        # Connect to the database (creates it if it doesn't exist)
+        
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         
-        # Create users table
+        
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +30,7 @@ def init_db():
         )
         ''')
         
-        # Create events table
+        
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS events (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,7 +42,7 @@ def init_db():
         )
         ''')
         
-        # Create attendees table
+        
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS attendees (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +54,7 @@ def init_db():
         )
         ''')
         
-        # Create notifications table
+        
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS notifications (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
