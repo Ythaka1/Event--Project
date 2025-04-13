@@ -11,7 +11,7 @@ const EventDetailPage = ({ events }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Find the event with the matching ID
+    
     const foundEvent = events.find((e) => e.id === eventId)
 
     if (foundEvent) {
@@ -47,7 +47,7 @@ const EventDetailPage = ({ events }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-950 pt-20 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back button */}
+        
         <button
           onClick={() => navigate("/")}
           className="flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 mb-6 transition-colors duration-300"
@@ -56,7 +56,7 @@ const EventDetailPage = ({ events }) => {
           Back to events
         </button>
 
-        {/* Event header */}
+        
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-8">
           <div className="relative h-64 sm:h-80 md:h-96">
             <img
@@ -120,7 +120,7 @@ const EventDetailPage = ({ events }) => {
           </div>
         </div>
 
-        {/* Event gallery */}
+        
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Gallery</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -144,7 +144,7 @@ const EventDetailPage = ({ events }) => {
           </div>
         </div>
 
-        {/* Call to action */}
+        
         <div className="bg-purple-600 dark:bg-purple-700 rounded-lg shadow-lg p-8 text-center">
           <h2 className="text-2xl font-bold text-white mb-4">Ready to plan your {event.type.toLowerCase()}?</h2>
           <p className="text-purple-100 mb-6 max-w-2xl mx-auto">
