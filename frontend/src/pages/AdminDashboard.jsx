@@ -39,7 +39,7 @@ const AdminDashboard = () => {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const navigate = useNavigate()
 
-  // ma new events
+  
   const [newEvent, setNewEvent] = useState({
     name: "",
     description: "",
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
     location: "",
   })
 
-  // Handle input change for new event form
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setNewEvent((prev) => ({
@@ -56,10 +56,10 @@ const AdminDashboard = () => {
     }))
   }
 
-  // API URL
+  
   const API_URL = "http://127.0.0.1:5000"
 
-  // Sample events data
+  
   const sampleEvents = [
     {
       id: 1,
@@ -124,10 +124,10 @@ const AdminDashboard = () => {
     return true
   }
 
-  // Fetch user data
+  
   const fetchUserData = async () => {
     try {
-      // Try to get user data from API
+      
       const response = await fetch(`${API_URL}/me`, {
         credentials: "include",
       })
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // Fetch events
+  
   const fetchEvents = async () => {
     try {
       const response = await fetch(`${API_URL}/events`, {
@@ -186,7 +186,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // Fetch attendees for a specific event
+  
   const fetchEventAttendees = async (eventId) => {
     try {
       const response = await fetch(`${API_URL}/events/${eventId}/attendees`, {
@@ -205,13 +205,13 @@ const AdminDashboard = () => {
     }
   }
 
-  // Load data when component mounts
+  
   useEffect(() => {
     console.log("AdminDashboard component mounted")
 
     const init = async () => {
     
-      // ina  ensure 2 least try to load data
+      
       try {
         await fetchUserData()
         await fetchEvents()
@@ -250,7 +250,7 @@ const AdminDashboard = () => {
 
       console.log("Sending event data to backend:", eventData)
 
-      // Send the data to the backend
+      
       const response = await fetch(`${API_URL}/events`, {
         method: "POST",
         headers: {
@@ -264,10 +264,10 @@ const AdminDashboard = () => {
         const createdEvent = await response.json()
         console.log("Event created successfully:", createdEvent)
 
-        // Add the new event to the state
+        
         setEvents((prevEvents) => [...prevEvents, createdEvent])
 
-        // Reset the form
+        
         setNewEvent({ name: "", description: "", date: "", location: "" })
         setIsCreatingEvent(false)
         showNotification("Event created successfully and saved to database", "success")
@@ -286,7 +286,7 @@ const AdminDashboard = () => {
           attendees: 0,
         }
 
-        // Add the fallback event to the state
+        
         setEvents([...events, fallbackEvent])
         setNewEvent({ name: "", description: "", date: "", location: "" })
         setIsCreatingEvent(false)
@@ -295,7 +295,7 @@ const AdminDashboard = () => {
     } catch (err) {
       console.error("Error creating event:", err)
 
-      // Create a fallback event with a unique ID for the UI
+      
       const newId = Math.max(...events.map((e) => e.id || 0), 0) + 1
       const fallbackEvent = {
         id: newId,
@@ -316,36 +316,36 @@ const AdminDashboard = () => {
     }
   }
 
-  // Delete an event
+  
   const handleDeleteEvent = async (eventId) => {
     if (!checkAuth()) return
 
     try {
       setLoading(true)
 
-      // Send delete request to the backend
+      
       const response = await fetch(`${API_URL}/events/${eventId}`, {
         method: "DELETE",
         credentials: "include",
       })
 
       if (response.ok) {
-        // If the backend request was successful, remove the event from the state
+        
         setEvents(events.filter((event) => event.id !== eventId))
         showNotification("Event deleted successfully from database", "success")
       } else {
-        // If there was an error from the backend
+        
         const errorData = await response.json().catch(() => ({ message: "Unknown error occurred" }))
         console.error("Error deleting event:", errorData)
 
-        // Remove the event from the UI anyway
+      
         setEvents(events.filter((event) => event.id !== eventId))
         showNotification("Event removed from UI. Database delete failed: " + errorData.message, "error")
       }
     } catch (err) {
       console.error("Error deleting event:", err)
 
-      // Remove the event from the UI anyway
+      
       setEvents(events.filter((event) => event.id !== eventId))
       showNotification("Event removed from UI. Database delete failed: " + err.message, "error")
     } finally {
@@ -353,7 +353,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // Register an attendee
+  
   const handleRegisterAttendee = async (eventId) => {
     if (!checkAuth()) return
 
@@ -384,17 +384,17 @@ const AdminDashboard = () => {
       })
 
       if (response.ok) {
-        // If the backend request was successful, get the created attendee
+        
         const createdAttendee = await response.json()
         console.log("Attendee registered successfully:", createdAttendee)
 
-        // Add the new attendee to the state
+        
         setAttendees((prev) => ({
           ...prev,
           [eventId]: [...(prev[eventId] || []), createdAttendee],
         }))
 
-        // Update attendee count in the event
+        
         setEvents(
           events.map((event) => (event.id === eventId ? { ...event, attendees: (event.attendees || 0) + 1 } : event)),
         )
@@ -402,24 +402,24 @@ const AdminDashboard = () => {
         showNotification(`Invitation sent to ${attendeeEmail} and saved to database`, "success")
         setAttendeeEmail("")
       } else {
-        // If there was an error from the backend
+        
         const errorData = await response.json().catch(() => ({ message: "Unknown error occurred" }))
         console.error("Error registering attendee:", errorData)
 
-        // Create a fallback attendee for the UI
+        
         const newAttendee = {
           id: Date.now(),
           name: attendeeEmail.split("@")[0],
           email: attendeeEmail,
         }
 
-        // Add the fallback attendee to the state
+        
         setAttendees((prev) => ({
           ...prev,
           [eventId]: [...(prev[eventId] || []), newAttendee],
         }))
 
-        // Update attendee count in the event
+        
         setEvents(
           events.map((event) => (event.id === eventId ? { ...event, attendees: (event.attendees || 0) + 1 } : event)),
         )
@@ -475,7 +475,7 @@ const AdminDashboard = () => {
 
       console.log("Sending notification data to backend:", notificationData)
 
-      // Send the data to the backend
+      
       const response = await fetch(`${API_URL}/notifications`, {
         method: "POST",
         headers: {
@@ -486,12 +486,12 @@ const AdminDashboard = () => {
       })
 
       if (response.ok) {
-        // If the backend request was successful
+        
         console.log("Notification sent successfully")
         showNotification("Notification sent to attendees and saved to database", "success")
         setNotificationMessage("")
       } else {
-        // If there was an error from the backend
+        
         const errorData = await response.json().catch(() => ({ message: "Unknown error occurred" }))
         console.error("Error sending notification:", errorData)
         showNotification("Notification failed: " + errorData.message, "error")
@@ -504,20 +504,20 @@ const AdminDashboard = () => {
     }
   }
 
-  // Show notification
+  
   const showNotification = (message, type) => {
     setNotification({ show: true, message, type })
     setTimeout(() => {
       setNotification({ show: false, message: "", type: "" })
-    }, 5000) // Increased to 5 seconds for better visibility
+    }, 5000) 
   }
 
-  // Toggle event expansion
+  
   const toggleEventExpansion = (eventId) => {
     setExpandedEvent(expandedEvent === eventId ? null : eventId)
   }
 
-  // Handle sign out
+  
   const handleSignOut = () => {
     localStorage.removeItem("userRole")
     localStorage.removeItem("userName")
