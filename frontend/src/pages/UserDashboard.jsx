@@ -85,7 +85,6 @@ const UserDashboard = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleSignOut = () => {
-    // hapa flask session.pop sign out logic here
     navigate("/")
   }
 

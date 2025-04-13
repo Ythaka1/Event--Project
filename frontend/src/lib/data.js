@@ -86,7 +86,7 @@ export const eventsData = [
     },
     {
       id: 4,
-      name: "Tilen Otuoma",
+      name: "Tillen Otuoma",
       role: "Logistics Manager",
       avatar: "/placeholder.svg?height=100&width=100",
     },

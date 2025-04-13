@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 function Event({ id, title, image, rating, description }) {
     return (
       <div>
