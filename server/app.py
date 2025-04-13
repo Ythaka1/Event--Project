@@ -8,7 +8,7 @@ import hashlib
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-# Database setup
+
 DB_PATH = 'eventify.db'
 
 def init_db():
@@ -90,7 +90,7 @@ def init_db():
                 )
                 ''')
                 
-                # Create events table
+                
                 cursor.execute('''
                 CREATE TABLE IF NOT EXISTS events (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,7 +102,7 @@ def init_db():
                 )
                 ''')
                 
-                # Create attendees table
+                
                 cursor.execute('''
                 CREATE TABLE IF NOT EXISTS attendees (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -114,7 +114,7 @@ def init_db():
                 )
                 ''')
                 
-                # Create notifications table
+                
                 cursor.execute('''
                 CREATE TABLE IF NOT EXISTS notifications (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -140,10 +140,10 @@ def dict_factory(cursor, row):
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Initialize database at startup
+
 init_db()
 
-# Routes
+
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.json
@@ -166,7 +166,7 @@ def signup():
         conn.row_factory = dict_factory
         cursor = conn.cursor()
         
-        # Check if email already exists
+       
         cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         existing_user = cursor.fetchone()
         
@@ -174,7 +174,7 @@ def signup():
             conn.close()
             return jsonify({'message': 'Email already registered'}), 400
         
-        # Insert new user
+        
         cursor.execute(
             'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
             (name, email, hashed_password, role)
@@ -182,7 +182,7 @@ def signup():
         
         user_id = cursor.lastrowid
         
-        # Get the created user (without password)
+        
         cursor.execute('SELECT id, name, email, role FROM users WHERE id = ?', (user_id,))
         user = cursor.fetchone()
         
@@ -203,7 +203,7 @@ def login():
     data = request.json
     email = data.get('email')
     password = data.get('password')
-    role = data.get('role')  # This might be provided from the form
+    role = data.get('role')  
     
     if not email or not password:
         return jsonify({'message': 'Email and password are required'}), 400
@@ -213,10 +213,10 @@ def login():
         conn.row_factory = dict_factory
         cursor = conn.cursor()
         
-        # Hash the password
+       
         hashed_password = hash_password(password)
         
-        # Find user by email and password
+        
         cursor.execute('SELECT id, name, email, role FROM users WHERE email = ? AND password = ?', 
                       (email, hashed_password))
         user = cursor.fetchone()
@@ -229,12 +229,12 @@ def login():
                 'user': user
             })
         else:
-            # For testing purposes, create a fallback user if database login fails
+            
             fallback_user = {
                 'id': 1,
                 'name': email.split('@')[0],
                 'email': email,
-                'role': role or 'attendee'  # Use the role from the form or default to attendee
+                'role': role or 'attendee'  
             }
             
             return jsonify({
@@ -244,12 +244,12 @@ def login():
     
     except Exception as e:
         print(f"Error in login: {e}")
-        # For testing purposes, create a fallback user if an error occurs
+        
         fallback_user = {
             'id': 1,
             'name': email.split('@')[0],
             'email': email,
-            'role': role or 'attendee'  # Use the role from the form or default to attendee
+            'role': role or 'attendee'  
         }
         
         return jsonify({
@@ -259,8 +259,7 @@ def login():
 
 @app.route('/me', methods=['GET'])
 def get_user():
-    # In a real app, you would get the user from the session
-    # For this example, we'll just return a dummy user
+   
     return jsonify({
         'id': 1,
         'name': 'Admin User',
@@ -278,7 +277,7 @@ def get_events():
         cursor.execute('SELECT * FROM events ORDER BY id DESC')
         events = cursor.fetchall()
         
-        # Add attendee count to each event
+        
         for event in events:
             cursor.execute('SELECT COUNT(*) as count FROM attendees WHERE event_id = ?', (event['id'],))
             count = cursor.fetchone()
@@ -307,10 +306,10 @@ def create_event():
         
         event_id = cursor.lastrowid
         
-        # Get the created event
+        
         cursor.execute('SELECT * FROM events WHERE id = ?', (event_id,))
         event = cursor.fetchone()
-        event['attendees'] = 0  # No attendees yet
+        event['attendees'] = 0  
         
         conn.commit()
         conn.close()
@@ -326,13 +325,13 @@ def delete_event(event_id):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         
-        # Delete attendees first (foreign key constraint)
+        
         cursor.execute('DELETE FROM attendees WHERE event_id = ?', (event_id,))
         
-        # Delete notifications (foreign key constraint)
+        
         cursor.execute('DELETE FROM notifications WHERE event_id = ?', (event_id,))
         
-        # Delete the event
+        
         cursor.execute('DELETE FROM events WHERE id = ?', (event_id,))
         
         conn.commit()
@@ -369,7 +368,7 @@ def create_attendee():
         conn.row_factory = dict_factory
         cursor = conn.cursor()
         
-        # Extract name from email (before @)
+        
         email = data.get('email')
         name = email.split('@')[0] if '@' in email else email
         
@@ -380,7 +379,7 @@ def create_attendee():
         
         attendee_id = cursor.lastrowid
         
-        # Get the created attendee
+       
         cursor.execute('SELECT * FROM attendees WHERE id = ?', (attendee_id,))
         attendee = cursor.fetchone()
         
@@ -413,27 +412,27 @@ def create_notification():
         print(f"Error creating notification: {e}")
         return jsonify({'message': f'Failed to send notification: {str(e)}'}), 500
 
-# Add a test route to verify the database is working
+
 @app.route('/test-db', methods=['GET'])
 def test_db():
     try:
-        # Try to connect to the database
+        
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         
-        # Check if users table exists
+       
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
         users_table = cursor.fetchone()
         
-        # Check if events table exists
+        
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='events'")
         events_table = cursor.fetchone()
         
-        # Check if attendees table exists
+        
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='attendees'")
         attendees_table = cursor.fetchone()
         
-        # Check if notifications table exists
+        
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='notifications'")
         notifications_table = cursor.fetchone()
         
