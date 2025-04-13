@@ -131,7 +131,7 @@ const events = [
   },
 ]
 
-// Testimonials data
+
 const testimonials = [
   {
     name: "Sarah Johnson",
@@ -153,7 +153,7 @@ const testimonials = [
   },
 ]
 
-// Star rating component
+
 const StarRating = ({ rating }) => {
   return (
     <div className="flex">
@@ -178,7 +178,7 @@ function ProtectedRoute({ children, allowedRoles }) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Check authentication on component mount
+    
     if (!userRole || !allowedRoles.includes(userRole)) {
       console.log("Access denied. User role:", userRole, "Allowed roles:", allowedRoles)
       navigate("/login", { replace: true })
@@ -187,12 +187,12 @@ function ProtectedRoute({ children, allowedRoles }) {
     }
   }, [userRole, allowedRoles, navigate])
 
-  // If we have a valid role, render the children
+  
   if (userRole && allowedRoles.includes(userRole)) {
     return children
   }
 
-  // Return null while redirecting to avoid flash of unauthorized content
+  // Return null while redirecting 
   return null
 }
 

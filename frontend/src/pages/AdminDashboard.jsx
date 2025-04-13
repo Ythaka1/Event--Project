@@ -47,7 +47,7 @@ const AdminDashboard = () => {
     location: "",
   })
 
-  // Handle input change for new event form
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setNewEvent((prev) => ({
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
   // API URL
   const API_URL = "http://127.0.0.1:5000"
 
-  // Sample events data
+  
   const sampleEvents = [
     {
       id: 1,
@@ -104,7 +104,7 @@ const AdminDashboard = () => {
     ],
   }
 
-  // Check if user is authenticated
+  
   const checkAuth = () => {
     const userRole = localStorage.getItem("userRole")
     console.log("Checking auth, user role:", userRole)
@@ -124,10 +124,10 @@ const AdminDashboard = () => {
     return true
   }
 
-  // Fetch user data
+  
   const fetchUserData = async () => {
     try {
-      // Try to get user data from API
+     
       const response = await fetch(`${API_URL}/me`, {
         credentials: "include",
       })
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // Fetch events
+  
   const fetchEvents = async () => {
     try {
       const response = await fetch(`${API_URL}/events`, {
@@ -272,7 +272,7 @@ const AdminDashboard = () => {
         setIsCreatingEvent(false)
         showNotification("Event created successfully and saved to database", "success")
       } else {
-        // kama kulikuwa na error
+        // if it had  error
         const errorData = await response.json().catch(() => ({ message: "Unknown error occurred" }))
         console.error("Error creating event:", errorData)
 
