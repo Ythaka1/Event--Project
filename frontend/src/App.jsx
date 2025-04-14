@@ -192,7 +192,6 @@ function ProtectedRoute({ children, allowedRoles }) {
     return children
   }
 
-  // Return null while redirecting 
   return null
 }
 
