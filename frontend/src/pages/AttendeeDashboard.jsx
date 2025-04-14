@@ -24,7 +24,7 @@ const AttendeeDashboard = () => {
   const [eventAttendees, setEventAttendees] = useState({})
   const navigate = useNavigate()
 
-  const API_URL = "http://127.0.0.1:5000"
+  const API_URL = "https://event-project-1-fgi5.onrender.com"
 
   const sampleNotifications = [
     {
